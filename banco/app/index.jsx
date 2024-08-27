@@ -1,10 +1,12 @@
 import React, {useState} from "react";
 import {View, Text, Image, Button, StyleSheet, Modal, TextInput } from "react-native";
+import Botao from "../components/Botao";
 
 const App = () => {
 
     const [saldo, setSaldo] = useState(7320.92)
     const [valorInput, setValorInput] = useState(null)
+    const [ope, setOpe] = useState(null)
     const [visivel, setVisivel] = useState(false)
 
     const executar = (operacao) =>{
@@ -16,6 +18,7 @@ const App = () => {
                 setSaldo(saldo + (parseFloat(valorInput) + (parseFloat(valorInput) * 0.01)))
                 break
         }
+        setOpe(null)
         setVisivel(false)
     }
 
@@ -25,13 +28,21 @@ const App = () => {
                 animationType="fade"
                 visible = {visivel}
             >
-                <Text> Você deseja realizar o saque no valor de {valorInput}?</Text>
-                <Button
-                    title="SIM"
-                />
-                <Button
-                    title="NÂO"
-                />
+                <View style = {styles.containerModal}>
+                    <Text> Você deseja realizar o saque no valor de {valorInput}? </Text>
+                    <View  style = {styles.containerButtons}>
+                        <Botao
+                            texto="SIM"
+                            onPress={() => executar(ope)}
+                            estilo={styles.btS}
+                        />
+                        <Botao
+                            texto="NÂO"
+                            onPress={() => [setVisivel(false), setOpe(null)]}
+                            estilo={styles.btN}
+                        />
+                    </View>
+                </View>
             </Modal>
             <Image
             style = {styles.logo}
@@ -56,11 +67,11 @@ const App = () => {
             />
             <Button
             title="sacar"
-            onPress={() => setSaldo(saldo - (parseFloat(valorInput) + ((saldo - parseFloat(valorInput)) * 0.025)))}
+            onPress={() => [setVisivel(true), setOpe("saque")]}
             />
             <Button
             title="depositar"
-            onPress={() => setSaldo(saldo + (parseFloat(valorInput) + (parseFloat(valorInput) * 0.01)))}
+            onPress={() => [setVisivel(true), setOpe("deposito")]}
             />
         </View>
     )
@@ -96,6 +107,32 @@ const styles = StyleSheet.create({
         width: 200,
         height: 40,
         padding: 5
+    },
+    containerModal: {
+        display: 'flex',
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 30
+    },
+    containerButtons: {
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 10
+    },
+    btS: {
+        padding: 10,
+        borderColor: 'black',
+        borderWidth: 2,
+        borderRadius: 5,
+        backgroundColor: 'green'
+    },
+    btN: {
+        padding: 10,
+        borderColor: 'black',
+        borderWidth: 2,
+        borderRadius: 5,
+        backgroundColor: 'red'
     }
 })
 
